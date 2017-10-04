@@ -8,6 +8,13 @@ set __toaster_color_white F1F1F1
 set __toaster_color_purple 9458FF
 set __toaster_color_lilac AE81FF
 
+function __toaster_user_hostname
+    __toaster_color_echo $__toaster_color_green (whoami)
+    __toaster_color_echo $__toaster_color_white ":"
+    __toaster_color_echo $__toaster_color_orange (hostname | cut -d"." -f1)
+    __toaster_color_echo $__toaster_color_white ":"
+end
+
 function __toaster_color_echo
   set_color $argv[1]
   if test (count $argv) -eq 2
@@ -19,7 +26,7 @@ function __toaster_current_folder
   if test $PWD = '/'
     echo -n '/'
   else
-    echo -n $PWD | grep -o -E '[^\/]+$'
+    echo -n $PWD | sed -e "s|^$HOME|~|"
   end
 end
 
@@ -68,6 +75,7 @@ end
 
 function fish_prompt
   __toaster_color_echo $__toaster_color_blue "# "
+  __toaster_user_hostname
   __toaster_color_echo $__toaster_color_purple (__toaster_current_folder)
   __toaster_git_status
   echo
