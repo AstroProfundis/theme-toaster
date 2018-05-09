@@ -74,10 +74,11 @@ function __toaster_git_status
 end
 
 function fish_prompt
-  __toaster_color_echo $__toaster_color_blue "# "
+  __toaster_color_echo $__toaster_color_blue "╭─"
   __toaster_user_hostname
   __toaster_color_echo $__toaster_color_purple (__toaster_current_folder)
   __toaster_git_status
   echo
+  __toaster_color_echo $__toaster_color_blue "╰─"
   __toaster_color_echo $__toaster_color_pink "\$ "
 end
