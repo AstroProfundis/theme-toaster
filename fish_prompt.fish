@@ -3,6 +3,7 @@ set __toaster_color_blue 6EC9DD
 set __toaster_color_green A6E22E
 set __toaster_color_yellow E6DB7E
 set __toaster_color_pink F92672
+set __toaster_color_red FF2052
 set __toaster_color_grey 554F48
 set __toaster_color_white F1F1F1
 set __toaster_color_purple 9458FF
@@ -81,4 +82,12 @@ function fish_prompt
   echo
   __toaster_color_echo $__toaster_color_blue "╰─"
   __toaster_color_echo $__toaster_color_pink "\$ "
+end
+
+function fish_right_prompt
+  set -l st $status
+
+  if [ $st != 0 ];
+     __toaster_color_echo $__toaster_color_red "►$st"
+  end
 end
