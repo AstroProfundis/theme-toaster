@@ -24,11 +24,16 @@ function __toaster_color_echo
 end
 
 function __toaster_current_folder
-  if test $PWD = '/'
-    echo -n '/'
+  set -l _pwd $PWD
+
+  if test $_pwd = '/'
+    set _pwd '/'
   else
-    echo -n $PWD | sed -e "s|^$HOME|~|"
+    set _pwd (string replace -r "^$HOME" '~' "$_pwd")
   end
+
+  set _pwd (string replace -ar '(\.?[^/]{1})[^/]*/' '$1/' "$_pwd")
+  echo -n $_pwd
 end
 
 function __toaster_git_status_codes
