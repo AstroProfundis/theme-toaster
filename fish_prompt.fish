@@ -2,9 +2,9 @@ set __toaster_color_orange FD971F
 set __toaster_color_blue 6EC9DD
 set __toaster_color_green A6E22E
 set __toaster_color_yellow E6DB7E
-set __toaster_color_pink F92672
+set __toaster_color_pink FA3F82
 set __toaster_color_red FF2052
-set __toaster_color_grey 554F48
+set __toaster_color_grey 67615E
 set __toaster_color_white F1F1F1
 set __toaster_color_purple 9458FF
 set __toaster_color_lilac AE81FF
@@ -44,6 +44,18 @@ function __toaster_git_branch_name
   echo (git rev-parse --abbrev-ref HEAD 2> /dev/null)
 end
 
+function __toaster_git_merge_status
+  set -l git_dir (command git rev-parse --git-dir ^/dev/null)
+
+  if test -e "$git_dir/rebase-merge" -o -e "$git_dir/rebase-apply"
+    echo '+rebase'
+  else if test -e "$git_dir/MERGE_HEAD"
+    echo '+merge'
+  else if test -e "$git_dir/BISECT_LOG"
+    echo "+bisect"
+  end
+end
+
 function __toaster_rainbow
   if echo $argv[1] | grep -q -e $argv[3]
     __toaster_color_echo $argv[2] "彡ミ"
@@ -63,11 +75,17 @@ function __toaster_git_status_icons
 end
 
 function __toaster_git_status
+  set -l git_branch (__toaster_git_branch_name)
   # In git
-  if test -n (__toaster_git_branch_name)
+  if test -n $git_branch
+    set -l merge_status (__toaster_git_merge_status)
 
     __toaster_color_echo $__toaster_color_blue " git"
-    __toaster_color_echo $__toaster_color_white ":"(__toaster_git_branch_name)
+    __toaster_color_echo $__toaster_color_white ":$git_branch"
+
+    if test -n $merge_status
+      __toaster_color_echo $__toaster_color_pink $merge_status
+    end
 
     if test -n (__toaster_git_status_codes)
       __toaster_color_echo $__toaster_color_pink ' ●'
@@ -85,7 +103,7 @@ function fish_prompt
   __toaster_color_echo $__toaster_color_purple (__toaster_current_folder)
   __toaster_git_status
   echo
-  __toaster_color_echo $__toaster_color_blue "╰─"
+  __toaster_color_echo $__toaster_color_blue "╰>"
   __toaster_color_echo $__toaster_color_pink "\$ "
 end
 
