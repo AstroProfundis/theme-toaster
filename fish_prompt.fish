@@ -45,7 +45,7 @@ function __toaster_git_branch_name
 end
 
 function __toaster_git_merge_status
-  set -l git_dir (command git rev-parse --git-dir ^/dev/null)
+  set -l git_dir (command git rev-parse --git-dir 2> /dev/null)
 
   if test -e "$git_dir/rebase-merge" -o -e "$git_dir/rebase-apply"
     echo '+rebase'
